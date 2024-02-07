@@ -27,12 +27,12 @@ import type { Metadata } from 'next';
 let frameMetadata = getFrameMetadata({
   buttons: [
     {
-      label: "Connect Braavos Wallet",
       action: "post_redirect",
+      label: "Connect Braavos Wallet",
     }
   ],
   image: `${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/QmPCKukNRRynvEwSnuFPe5hyx2JDnWphtDGjQVf66LV88L/starknet_1.png`,
-  post_url: `https://instagram.com/0xnestor/`,
+  post_url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/frame`,
 });
 
 export const metadata: Metadata = {
