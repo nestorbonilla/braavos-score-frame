@@ -22,4 +22,4 @@ export async function POST(req: NextRequest): Promise<Response> {
   return getResponse(req);
 }
 
-export let dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";

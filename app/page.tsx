@@ -24,3 +24,11 @@ export const metadata: Metadata = {
     ...frameMetadata,
   },
 };
+
+export default function Page() {
+  return (
+    <>
+      <h1>Braavos ProScore Leaderboard</h1>
+    </>
+  );
+}

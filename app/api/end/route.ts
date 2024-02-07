@@ -1,6 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
+
 export async function POST(req: NextRequest): Promise<Response> {
   let data = await req.json();
+  console.log(data);
   let buttonId = data.untrustedData.buttonIndex;
 
   let path: string;
@@ -12,11 +14,13 @@ export async function POST(req: NextRequest): Promise<Response> {
     path = '';
   }
   let headers = new Headers();
-  headers.set('Location', `${process.env.NEXT_PUBLIC_BASE_URL}/`);
-  let response = NextResponse.redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/${path}`, {
-    headers: headers,
-    status: 302,
-  });
+  headers.set("Location", `${process.env.NEXT_PUBLIC_BASE_URL}/`);
+  let response = NextResponse.redirect(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/${path}`,
+    {
+      headers: headers,
+      status: 302,
+    });
   return response;
 }
-export let dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
