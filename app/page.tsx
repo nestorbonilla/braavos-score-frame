@@ -28,7 +28,7 @@ let frameMetadata = getFrameMetadata({
   buttons: [
     {
       label: "Connect Braavos Wallet",
-      action: "post",
+      action: "post_redirect",
     }
   ],
   image: `${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/QmPCKukNRRynvEwSnuFPe5hyx2JDnWphtDGjQVf66LV88L/starknet_1.png`,
