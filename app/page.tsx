@@ -7,14 +7,14 @@ export default function Home() {
     <>
       <Head>
         <meta property="og:title" content="Frame" />
-        <meta property="og:image" content={`${process.env.NEXT_PUBLIC_BASE_URL}/starknet-1.png`} />
+        <meta property="og:image" content={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/QmPCKukNRRynvEwSnuFPe5hyx2JDnWphtDGjQVf66LV88L/starknet_1.png`} />
         <meta property="fc:frame" content="vNext" />
-        <meta property="fc:frame:image" content={`${process.env.NEXT_PUBLIC_BASE_URL}/starknet_1.png`} />
+        <meta property="fc:frame:image" content={`${process.env.NEXT_PUBLIC_BASE_URL}/ipfs/QmPCKukNRRynvEwSnuFPe5hyx2JDnWphtDGjQVf66LV88L/starknet_2.png`} />
         <meta property="fc:frame:button:1" content="Connect Starknet Wallet" />
         <meta property="fc:frame:button:1:action" content="post_redirect" />
         <meta
           property="fc:frame:post_url"
-          content={`${process.env.NEXT_PUBLIC_BASE_URL}api/redirect`}
+          content={`${process.env.NEXT_PUBLIC_BASE_URL}/api/redirect`}
         />
       </Head>
     </>
