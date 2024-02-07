@@ -9,7 +9,7 @@ export async function POST(req: NextRequest): Promise<Response> {
   if (buttonId === 1) {
     path = '/api/frame?id=2';
   } else if (buttonId === 2) {
-    path = 'pinatacloud';
+    path = 'finalized';
   } else {
     path = '';
   }
