@@ -28,11 +28,11 @@ let frameMetadata = getFrameMetadata({
   buttons: [
     {
       label: "Connect Braavos Wallet",
-      action: "post_redirect",
+      action: "link",
+      target: "https://instagram.com/0xnestor/",
     }
   ],
   image: `${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/QmPCKukNRRynvEwSnuFPe5hyx2JDnWphtDGjQVf66LV88L/starknet_1.png`,
-  post_url: `https://instagram.com/0xnestor/`,
 });
 
 export const metadata: Metadata = {
