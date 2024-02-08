@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@coinbase/onchainkit": "^0.5.1",
+    "@farcaster/hub-nodejs": "^0.10.23",
     "@starknet-react/core": "^2.2.4",
     "next": "14.1.0",
     "react": "^18",

@@ -1,7 +1,5 @@
 import { RpcProvider, Abi, Contract } from "starknet";
 
-export const BASE_URL = process.env.BASE_URL || "";
-
 export const timeValid = (timestamp: number): boolean => {
   // Farcaster epoch starts on Jan 1, 2021
   const farcasterEpochStart = new Date("2021-01-01T00:00:00Z").getTime() / 1000;
