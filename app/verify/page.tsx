@@ -2,10 +2,10 @@
 import { StarknetProvider } from "@/components/starknet-provider";
 import ConnectWallet from "@/components/connect-wallet";
 import { timeValid } from "@/utils";
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 
-export default function VerifyNoParamPage() {
+function VerifyNoParamPageComponent() {
   console.log("___________________________");
   console.log("accessing page verify...");
 
@@ -70,5 +70,13 @@ export default function VerifyNoParamPage() {
         </StarknetProvider>
       )}
     </div>
+  );
+}
+
+export default function VerifyNoParamPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <VerifyNoParamPageComponent />
+    </Suspense>
   );
 }
