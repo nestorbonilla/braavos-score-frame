@@ -21,13 +21,19 @@ export async function POST(req: Request) {
 
   if (messageBytes) {
     // Construye una URL absoluta para la redirección
-    // const origin = process.env.NEXT_PUBLIC_BASE_URL; //req.nextUrl.origin; // Obtiene el origen de la solicitud, incluyendo esquema y host
-    // const redirectUrl = `${origin}/verify/${messageBytes}`;
+    const origin = process.env.NEXT_PUBLIC_BASE_URL; //req.nextUrl.origin; // Obtiene el origen de la solicitud, incluyendo esquema y host
+    const redirectUrl = `${origin}/verify/${messageBytes}`;
     // let redirectUrl = NextResponse.redirect(new URL(`/verify/${messageBytes}`, req.url));
     console.log(`Redirecting to ${new URL(`/verify/${messageBytes}`, req.url)}`);
 
     // return NextResponse.redirect(redirectUrl);
-    return NextResponse.redirect(new URL(`/verify/${messageBytes}`, req.url));
+    // return NextResponse.redirect(new URL(`/verify/${messageBytes}`, req.url));
+    return new Response(null, {
+      status: 302,
+      headers: {
+        Location: redirectUrl,
+      },
+    });
 
   } else {
     // Manejo de error si messageBytes no está definido
