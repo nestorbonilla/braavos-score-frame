@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { timeValid } from "@/utils";
 
 export default function Home() {
+  console.log("hey ya llege a verify");
   const router = useRouter();
   const [invalidVerification, setInvalidVerification] = useState(false);
   const [fid, setFid] = useState(0);
