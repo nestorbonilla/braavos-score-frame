@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server';
 
 // Asume que esta función es parte de tu enfoque con la nueva estructura de 'app'.
 export async function POST(req: NextRequest) {
-  console.log("___________________________");
+  // console.log("___________________________");
   console.log("accessing api/validate...");
 
   // Asumiendo que el cuerpo de la solicitud es un ReadableStream, 
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
   const body = JSON.parse(bodyString);
 
   const messageBytes = body.messageBytes;
-  console.log(`messageBytes: ${messageBytes}`);
+  // console.log(`messageBytes: ${messageBytes}`);
 
   if (!messageBytes) {
     return new Response(JSON.stringify({ error: "Missing messageBytes" }), {

@@ -15,7 +15,12 @@ import {
   Signature,
 } from "starknet";
 import { timeValid, getAbi } from "@/utils";
-import Profile from "@/components/profile";
+// import Profile from "@/components/profile";
+
+interface StarknetProScoreResponse {
+  score: number; // Asumiendo que la respuesta es algo así
+  // Agrega más campos según lo que esperas recibir
+}
 
 type FarcasterData = {
   fid: number;
@@ -28,14 +33,14 @@ function ConnectWallet({ fid, timestamp }: FarcasterData) {
   const { disconnect } = useDisconnect();
   const { address, isConnected } = useAccount();
   const { starknetkitConnectModal } = useStarknetkitConnectModal({
-    dappName: "Starknet Farcaster",
+    dappName: "Braavos Pro Score",
   });
 
   const message: typedData.TypedData = {
     domain: {
-      name: "Starknet Farcaster",
+      name: "Braavos Pro Score",
       version: "1",
-      chainId: shortString.encodeShortString("SN_MAIN"),
+      chainId: shortString.encodeShortString("SN_GOERLI"),
     },
     types: {
       StarkNetDomain: [
@@ -70,7 +75,7 @@ function ConnectWallet({ fid, timestamp }: FarcasterData) {
       const response = await fetch("/api/addMapping", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fid, starknetAddress }),
+        body: JSON.stringify({ fid, starknetAddress, score }),
       });
 
       if (!response.ok) {
@@ -83,12 +88,30 @@ function ConnectWallet({ fid, timestamp }: FarcasterData) {
     }
   };
 
+  const [score, setScore] = useState(0);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.starknet_braavos) {
+      // console.log("Requesting Starknet Pro Score: ", window.starknet_braavos);
+      (window.starknet_braavos.request as any)({ type: "wallet_getStarknetProScore" })
+        .then((res: StarknetProScoreResponse) => {
+          console.log(res.score);
+          setScore(res.score);
+        })
+        .catch((error: Error) => {
+          console.error("Error fetching Starknet Pro Score:", error);
+          setScore(0);
+        });
+    }
+  }, [address]);
+
   const verifySignature = async (
     contractAddress: string,
     signature: Signature
   ) => {
+    console.log("accessing verifySignature...");
     const provider = new RpcProvider({
-      nodeUrl: "https://free-rpc.nethermind.io/mainnet-juno/",
+      nodeUrl: process.env.NEXT_PUBLIC_NETHERMIND_GOERLI_URL,
     });
 
     try {
@@ -99,15 +122,21 @@ function ConnectWallet({ fid, timestamp }: FarcasterData) {
 
       await contract.isValidSignature(msgHash, signature);
       setValidSignature(true);
+      // Get the score of Braavos Wallet
+
+      window.alert(
+        `Successfully verified ownership of address: ${address}`
+      );
+      console.log("To store on db: ", fid, contractAddress, score);
       // Store the result in a database
-      addMapping(fid, contractAddress)
-        .then(() => {
-          console.log("Mapping added");
-          window.alert(
-            `Successfully verified ownership of address: ${address}`
-          );
-        })
-        .catch((err) => console.error("Error adding mapping:", err));
+      // addMapping(fid, contractAddress, score)
+      //   .then(() => {
+      //     console.log("Mapping added");
+      //     window.alert(
+      //       `Successfully verified ownership of address: ${address}`
+      //     );
+      //   })
+      //   .catch((err) => console.error("Error adding mapping:", err));
     } catch (error) {
       console.error(error);
     }
@@ -115,6 +144,9 @@ function ConnectWallet({ fid, timestamp }: FarcasterData) {
 
   useEffect(() => {
     if (data && address) {
+      console.log("going to callVerifying signature...");
+      console.log("address: ", address);
+      console.log("data: ", data);
       verifySignature(address!, data);
     }
   }, [data]);
@@ -147,10 +179,14 @@ function ConnectWallet({ fid, timestamp }: FarcasterData) {
       ) : (
         <div>
           {validSignature ? (
-            <Profile />
+            // <Profile />
+            <div>Firma validada</div>
           ) : (
             <button
               onClick={() => {
+                // console.log("button pressed");
+                // console.log("timeValid: ", timeValid(timestamp));
+                // console.log("timestamp: ", timestamp);
                 if (timeValid(timestamp)) {
                   signTypedData();
                 }
@@ -170,7 +206,7 @@ function ConnectWallet({ fid, timestamp }: FarcasterData) {
             </button>
           )}
           <br />
-          {/* <button
+          <button
             onClick={disconnectWallet}
             style={{
               padding: "10px 15px",
@@ -182,7 +218,7 @@ function ConnectWallet({ fid, timestamp }: FarcasterData) {
             }}
           >
             Disconnect wallet
-          </button> */}
+          </button>
         </div>
       )}
     </div>

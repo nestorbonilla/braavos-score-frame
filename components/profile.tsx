@@ -10,7 +10,7 @@ export default function Profile() {
   const { disconnect } = useDisconnect();
   const { address, isConnected } = useAccount();
   const { starknetkitConnectModal } = useStarknetkitConnectModal({
-    dappName: "Starknet Farcaster",
+    dappName: "Braavos Pro Score",
   });
 
   const connectWallet = async () => {
@@ -22,47 +22,47 @@ export default function Profile() {
     await disconnect();
   };
 
-  const getMapping = async (starknetAddress: string, retries: number) => {
-    try {
-      const response = await fetch(
-        `/api/getMapping?starknetAddress=${starknetAddress}`
-      );
+  // const getMapping = async (starknetAddress: string, retries: number) => {
+  //   try {
+  //     const response = await fetch(
+  //       `/api/getMapping?starknetAddress=${starknetAddress}`
+  //     );
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
+  //     if (!response.ok) {
+  //       throw new Error("Network response was not ok");
+  //     }
 
-      return response.json();
-    } catch (error) {
-      // wait 1 second before retrying
-      setTimeout(() => {
-        if (retries < 3) {
-          getMapping(starknetAddress, retries + 1);
-        } else {
-          setErrorMessage("Failed to get mapping");
-        }
-      }, 1000);
-      console.error("Failed to get mapping:", error);
-    }
-  };
+  //     return response.json();
+  //   } catch (error) {
+  //     // wait 1 second before retrying
+  //     setTimeout(() => {
+  //       if (retries < 3) {
+  //         getMapping(starknetAddress, retries + 1);
+  //       } else {
+  //         setErrorMessage("Failed to get mapping");
+  //       }
+  //     }, 1000);
+  //     console.error("Failed to get mapping:", error);
+  //   }
+  // };
 
-  useEffect(() => {
-    if (address) {
-      let retries = 0;
-      getMapping(address, retries).then((res) => {
-        if (res) {
-          fetch(`/api/userData?fid=${res.fid}`)
-            .then((response) => response.json())
-            .then((data) => {
-              setProfileData(data);
-            })
-            .catch((error) => {
-              console.error("Error fetching user data:", error);
-            });
-        }
-      });
-    }
-  }, [address]);
+  // useEffect(() => {
+  //   if (address) {
+  //     let retries = 0;
+  //     getMapping(address, retries).then((res) => {
+  //       if (res) {
+  //         fetch(`/api/userData?fid=${res.fid}`)
+  //           .then((response) => response.json())
+  //           .then((data) => {
+  //             setProfileData(data);
+  //           })
+  //           .catch((error) => {
+  //             console.error("Error fetching user data:", error);
+  //           });
+  //       }
+  //     });
+  //   }
+  // }, [address]);
 
   return (
     <div

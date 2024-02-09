@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 
-import { mainnet } from "@starknet-react/chains";
+import { mainnet, goerli } from "@starknet-react/chains";
 import {
   StarknetConfig,
   nethermindProvider,
@@ -15,7 +15,7 @@ export function StarknetProvider({ children }: { children: React.ReactNode }) {
     // Show these connectors if the user has no connector installed.
     recommended: [braavos()],
     // Hide recommended connectors if the user has any connector installed.
-    includeRecommended: "onlyIfNoConnectors",
+    includeRecommended: "always",
     // Randomize the order of the connectors.
     order: "random",
   });

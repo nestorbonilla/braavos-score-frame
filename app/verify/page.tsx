@@ -22,7 +22,7 @@ function VerifyNoParamPageComponent() {
 
   useEffect(() => {
     console.log("going to call api/validate");
-    console.log(`messageBytes: ${messageBytesJson}`);
+    // console.log(`messageBytes: ${messageBytesJson}`);
     // let messageBytesJson = JSON.stringify({ messageBytes });
     // console.log(`messageBytesJson: ${messageBytesJson}`);
     if (messageBytesJson) {
