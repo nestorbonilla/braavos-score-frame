@@ -40,7 +40,7 @@ function ConnectWallet({ fid, timestamp }: FarcasterData) {
     domain: {
       name: "Braavos Pro Score",
       version: "1",
-      chainId: shortString.encodeShortString("SN_GOERLI"),
+      chainId: shortString.encodeShortString("SN_MAINNET"),
     },
     types: {
       StarkNetDomain: [
@@ -59,7 +59,7 @@ function ConnectWallet({ fid, timestamp }: FarcasterData) {
     },
     primaryType: "Verification",
   };
-  const { data, signTypedData, isPending } = useSignTypedData(message);
+  const { data, isPending, signTypedData } = useSignTypedData(message);
 
   const connectWallet = async () => {
     const { connector } = await starknetkitConnectModal();
@@ -111,7 +111,7 @@ function ConnectWallet({ fid, timestamp }: FarcasterData) {
   ) => {
     console.log("accessing verifySignature...");
     const provider = new RpcProvider({
-      nodeUrl: process.env.NEXT_PUBLIC_NETHERMIND_GOERLI_URL,
+      nodeUrl: process.env.NEXT_PUBLIC_NETHERMIND_MAINNET_URL,
     });
 
     try {
@@ -186,8 +186,9 @@ function ConnectWallet({ fid, timestamp }: FarcasterData) {
               onClick={() => {
                 // console.log("button pressed");
                 // console.log("timeValid: ", timeValid(timestamp));
-                // console.log("timestamp: ", timestamp);
+                console.log("timestamp: ", timestamp);
                 if (timeValid(timestamp)) {
+                  console.log("timestamp is valid! ");
                   signTypedData();
                 }
               }}

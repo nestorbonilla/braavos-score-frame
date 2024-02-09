@@ -17,12 +17,12 @@ function VerifyNoParamPageComponent() {
   // console.log(`messageBytesJson: ${messageBytesJson}`);
 
   const [invalidVerification, setInvalidVerification] = useState(false);
-  const [fid, setFid] = useState(null);
-  const [timestamp, setTimestamp] = useState(null);
+  const [fid, setFid] = useState(0);
+  const [timestamp, setTimestamp] = useState(2);
 
   useEffect(() => {
     console.log("going to call api/validate");
-    // console.log(`messageBytes: ${messageBytesJson}`);
+    console.log(`messageBytes: ${messageBytesJson}`);
     // let messageBytesJson = JSON.stringify({ messageBytes });
     // console.log(`messageBytesJson: ${messageBytesJson}`);
     if (messageBytesJson) {
@@ -51,7 +51,7 @@ function VerifyNoParamPageComponent() {
     } else {
       setInvalidVerification(true);
     }
-  }, []); // Dependiendo del valor de messageBytes
+  }, [messageBytesJson]); // Dependiendo del valor de messageBytes
 
   return (
     <div>

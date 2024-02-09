@@ -14,8 +14,6 @@ let interBold = fs.readFileSync(interBoldPath);
 const sideImage = `${process.env.NEXT_PUBLIC_BASE_URL}/braavos_logo.png`;
 
 export async function GET(req: NextRequest) {
-  const searchParams = req.nextUrl.searchParams;
-  const message = searchParams.get("message") ?? "";
   let scores = [{
     user: "@0xNestor",
     score: "30",
