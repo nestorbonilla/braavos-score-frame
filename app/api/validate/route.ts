@@ -1,11 +1,9 @@
 import { NextRequest } from 'next/server';
 import { NeynarAPIClient, FeedType, FilterType } from "@neynar/nodejs-sdk";
-3
-
 
 // Asume que esta función es parte de tu enfoque con la nueva estructura de 'app'.
 export async function POST(req: NextRequest) {
-  // console.log("___________________________");
+  console.log("___________________________");
   console.log("accessing api/validate...");
 
   // Asumiendo que el cuerpo de la solicitud es un ReadableStream, 
@@ -20,7 +18,7 @@ export async function POST(req: NextRequest) {
   const body = JSON.parse(bodyString);
 
   const messageBytes = body.messageBytes;
-  console.log(`messageBytes: ${messageBytes}`);
+  // console.log(`messageBytes: ${messageBytes}`);
 
   if (!messageBytes) {
     return new Response(JSON.stringify({ error: "Missing messageBytes" }), {
@@ -29,36 +27,43 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  // return new Response(JSON.stringify({ fid: 9101, timestamp: "2021-21-10" }), {
-  //   status: 200,
-  //   headers: { 'Content-Type': 'application/json' }
-  // });
-
   try {
     // const buffer = Buffer.from(messageBytes, "hex");
     const client = new NeynarAPIClient(process.env.NEYNAR_API_KEY!);
     const response = await client.validateFrameAction(messageBytes);
-    // console.log("response from Neynar API:", response);
+    // console.log("response: ", response);
+    
+    if (response.valid) {
+      let fid = response.action?.interactor.fid;
+      let timestamp = 1707455233004;
+      let newRow = JSON.stringify({
+        fid,
+        timestamp
+      });
+      console.log("newRow: ", newRow);
+      const dbResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/database`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: newRow,
+      })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("data from api/database:");
+        console.log(data);
+      });
 
-    // fetch("https://nemes.farcaster.xyz:2281/v1/validateMessage", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/octet-stream" },
-    //   body: buffer,
-    // });
-    // const response = await fetch("https://nemes.farcaster.xyz:2281/v1/validateMessage", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/octet-stream" },
-    //   body: buffer,
-    // });
-
-    if (!response.valid) {
-      throw new Error(`HTTP error! status: ${response}`);
-    } else {
-      return new Response(JSON.stringify({ fid: response.action?.interactor.fid, timestamp: 1707455233004 }), {
+      // if (!dbResponse.success) {
+      //   throw new Error('Error al insertar datos');
+      // }
+      return new Response(JSON.stringify({ fid, timestamp }), {
         status: 200,
         headers: { 'Content-Type': 'application/json' }
       });
-
+      
+    } else {
+      throw new Error(`HTTP error! status: ${response}`);
     }
 
     // const data = await response.json();

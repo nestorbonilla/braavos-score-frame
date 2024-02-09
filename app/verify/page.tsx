@@ -2,56 +2,73 @@
 import { StarknetProvider } from "@/components/starknet-provider";
 import ConnectWallet from "@/components/connect-wallet";
 import { timeValid } from "@/utils";
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useState, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 function VerifyNoParamPageComponent() {
   console.log("___________________________");
   console.log("accessing page verify...");
 
+  console.log("before useSearchParams...");
   const [searchParams] = useSearchParams();
-  // console.log("getting searchParams...");
-  // console.log(searchParams[1]);
-  // const messageBytes = searchParams; // Suponiendo que el primer elemento es el parámetro que buscas
-  let messageBytesJson = JSON.stringify({ messageBytes: searchParams[1] });
-  // console.log(`messageBytesJson: ${messageBytesJson}`);
-
+  console.log("after useSearchParams...");
+  const messageBytesJson = JSON.stringify({ messageBytes: searchParams[1] });
   const [invalidVerification, setInvalidVerification] = useState(false);
   const [fid, setFid] = useState(0);
-  const [timestamp, setTimestamp] = useState(2);
+  const [timestamp, setTimestamp] = useState(0);
 
-  useEffect(() => {
-    console.log("going to call api/validate");
-    console.log(`messageBytes: ${messageBytesJson}`);
-    // let messageBytesJson = JSON.stringify({ messageBytes });
-    // console.log(`messageBytesJson: ${messageBytesJson}`);
+  const fetchValidate = async () => {
+    console.log("calling fetchValidate...");
     if (messageBytesJson) {
-      fetch("/api/validate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: messageBytesJson,
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log("data from api/validate:");
-          console.log(data);
-          if (data && data.timestamp && data.fid) {
-            setTimestamp(data.timestamp);
-            setFid(data.fid);
-          } else {
-            setInvalidVerification(true);
-          }
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-          setInvalidVerification(true);
+      try {
+        const response = await fetch("/api/validate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: messageBytesJson,
         });
+
+        const data = await response.json();
+
+        console.log("data from api/validate:");
+        console.log(data);
+
+        if (data && data.fc_timestamp && data.fid) {
+          setTimestamp(data.fc_timestamp);
+          setFid(data.fid);
+        } else {
+          setInvalidVerification(true);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        setInvalidVerification(true);
+      }
     } else {
       setInvalidVerification(true);
     }
-  }, [messageBytesJson]); // Dependiendo del valor de messageBytes
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/validate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: messageBytesJson,
+        });
+        const data = await response.json();
+        // Procesar los datos aquí
+        console.log(data);
+      } catch (error) {
+        console.error("Hubo un error con la petición fetch:", error);
+      }
+    };
+
+    fetchData();
+  }, []); // Dependiendo del valor de messageBytes
 
   return (
     <div>

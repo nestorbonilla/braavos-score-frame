@@ -15,11 +15,9 @@ import {
   Signature,
 } from "starknet";
 import { timeValid, getAbi } from "@/utils";
-// import Profile from "@/components/profile";
 
 interface StarknetProScoreResponse {
-  score: number; // Asumiendo que la respuesta es algo así
-  // Agrega más campos según lo que esperas recibir
+  score: number;
 }
 
 type FarcasterData = {
@@ -32,6 +30,7 @@ function ConnectWallet({ fid, timestamp }: FarcasterData) {
   const { connect } = useConnect();
   const { disconnect } = useDisconnect();
   const { address, isConnected } = useAccount();
+  const [score, setScore] = useState(0);
   const { starknetkitConnectModal } = useStarknetkitConnectModal({
     dappName: "Braavos Pro Score",
   });
@@ -70,40 +69,34 @@ function ConnectWallet({ fid, timestamp }: FarcasterData) {
     await disconnect();
   };
 
-  const addMapping = async (fid: number, starknetAddress: string) => {
-    try {
-      const response = await fetch("/api/addMapping", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fid, starknetAddress, score }),
-      });
+  // const addMapping = async (fid: number, starknetAddress: string, score: number, timestamp: number) => {
+  //   try {
+  //     const response = await fetch("/api/database", {
+  //       method: 'PATCH',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({ fid, starknetAddress, score, timestamp: 1707455233004 }),
+  //     })
+  //       .then((res) => res.json())
+  //       .then((data) => {
+  //         console.log("data from api/database:");
+  //         console.log(data);
+  //       });
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
 
-      return response.json();
-    } catch (error) {
-      console.error("Failed to add mapping:", error);
-    }
-  };
+  //     // if (!response.ok) {
+  //     //   throw new Error("Network response was not ok");
+  //     // }
 
-  const [score, setScore] = useState(0);
+  //     // return response.json();
+  //   } catch (error) {
+  //     console.error("Failed to add mapping:", error);
+  //   }
+  // };
 
-  useEffect(() => {
-    if (typeof window !== 'undefined' && window.starknet_braavos) {
-      // console.log("Requesting Starknet Pro Score: ", window.starknet_braavos);
-      (window.starknet_braavos.request as any)({ type: "wallet_getStarknetProScore" })
-        .then((res: StarknetProScoreResponse) => {
-          console.log(res.score);
-          setScore(res.score);
-        })
-        .catch((error: Error) => {
-          console.error("Error fetching Starknet Pro Score:", error);
-          setScore(0);
-        });
-    }
-  }, [address]);
+
+
 
   const verifySignature = async (
     contractAddress: string,
@@ -123,12 +116,35 @@ function ConnectWallet({ fid, timestamp }: FarcasterData) {
       await contract.isValidSignature(msgHash, signature);
       setValidSignature(true);
       // Get the score of Braavos Wallet
-
       window.alert(
         `Successfully verified ownership of address: ${address}`
       );
-      console.log("To store on db: ", fid, contractAddress, score);
+
+      // console.log("To store on db: ", fid, contractAddress, score);
       // Store the result in a database
+      try {
+        const response = await fetch("/api/database", {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ fid, starknetAddress: contractAddress, score, timestamp: 1707455233004 }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log("data from api/database:");
+            console.log(data);
+          });
+
+
+        // if (!response.ok) {
+        //   throw new Error("Network response was not ok");
+        // }
+
+        // return response.json();
+      } catch (error) {
+        console.error("Failed to add mapping:", error);
+      }
       // addMapping(fid, contractAddress, score)
       //   .then(() => {
       //     console.log("Mapping added");
@@ -144,6 +160,20 @@ function ConnectWallet({ fid, timestamp }: FarcasterData) {
 
   useEffect(() => {
     if (data && address) {
+      // if there's an address then we try to get the score
+      if (typeof window !== 'undefined' && window.starknet_braavos) {
+        // console.log("Requesting Starknet Pro Score: ", window.starknet_braavos);
+        (window.starknet_braavos.request as any)({ type: "wallet_getStarknetProScore" })
+          .then((res: StarknetProScoreResponse) => {
+            console.log(res.score);
+            setScore(res.score);
+          })
+          .catch((error: Error) => {
+            console.error("Error fetching Starknet Pro Score:", error);
+            setScore(0);
+          });
+      }
+      // then we try to verify the signature
       console.log("going to callVerifying signature...");
       console.log("address: ", address);
       console.log("data: ", data);
