@@ -28,12 +28,14 @@ type FarcasterData = {
 };
 
 function ConnectWallet({ fid, username, timestamp }: FarcasterData) {
-  const [validSignature, setValidSignature] = useState(false);
-  const { connect, connectors } = useConnect();
-  const { disconnect } = useDisconnect();
-  const { address, isConnected } = useAccount();
-  const [score, setScore] = useState(0);
-  const { starknetkitConnectModal } = useStarknetkitConnectModal({
+  let [validSignature, setValidSignature] = useState(false);
+  let { connect, connectors } = useConnect();
+  let { disconnect } = useDisconnect();
+  let { address, isConnected } = useAccount();
+  let [score, setScore] = useState(0);
+  let [signatureResult, setSignatureResult] = useState(false);
+  let [signatureMessageResult, setSignatureMessageResult] = useState("");
+  let { starknetkitConnectModal } = useStarknetkitConnectModal({
     dappName: "Braavos Pro Score",
   });
 
@@ -68,11 +70,6 @@ function ConnectWallet({ fid, username, timestamp }: FarcasterData) {
   };
   const { data, isPending, signTypedData } = useSignTypedData(message);
 
-  const connectWallet = async () => {
-    const { connector } = await starknetkitConnectModal();
-    await connect({ connector });
-  };
-
   const disconnectWallet = async () => {
     await disconnect();
   };
@@ -94,12 +91,7 @@ function ConnectWallet({ fid, username, timestamp }: FarcasterData) {
 
       await contract.isValidSignature(msgHash, signature);
       setValidSignature(true);
-      // Get the score of Braavos Wallet
-      // window.alert(
-      //   `Successfully verified ownership of address: ${address}`
-      // );
 
-      console.log("To store on db: ", fid, contractAddress, score);
       // Store the result in a database
       try {
         await fetch("/api/database", {
@@ -111,20 +103,13 @@ function ConnectWallet({ fid, username, timestamp }: FarcasterData) {
         })
           .then((res) => res.json())
           .then((data) => {
-            console.log("data from api/database:");
-            console.log(data);
+            setSignatureResult(data.success);
+            setSignatureMessageResult(data.message);
+            console.log(data.success);
           });
       } catch (error) {
         console.error("Failed to add mapping:", error);
       }
-      // addMapping(fid, contractAddress, score)
-      //   .then(() => {
-      //     console.log("Mapping added");
-      //     window.alert(
-      //       `Successfully verified ownership of address: ${address}`
-      //     );
-      //   })
-      //   .catch((err) => console.error("Error adding mapping:", err));
     } catch (error) {
       console.error(error);
     }
@@ -167,8 +152,6 @@ function ConnectWallet({ fid, username, timestamp }: FarcasterData) {
         textAlign: "center",
       }}
     >
-      {/* {address && <p style={{ marginBottom: "15px" }}>Address: {address}</p>} */}
-
       {!isConnected ? (
         connectors
           .filter((connector: Connector) => connector.name.toLowerCase().includes('braavos'))
@@ -187,8 +170,7 @@ function ConnectWallet({ fid, username, timestamp }: FarcasterData) {
       ) : (
         <div>
           {validSignature ? (
-            // <Profile />
-            <div>Firma validada</div>
+            <p className="mt-4 text-md md:text-lg lg:text-xl text-gray-300 dark:text-gray-400 leading-normal  px-4 dark:bg-gray-800 rounded-lg shadow">Signature Verified</p>
           ) : (
             <button
               onClick={() => {
@@ -210,6 +192,19 @@ function ConnectWallet({ fid, username, timestamp }: FarcasterData) {
           >
             Disconnect Wallet
           </button>
+          <br />
+          {signatureResult && (
+            <div className="rounded-md bg-green-50 p-4 mt-5">
+              <div className="flex">
+                <div className="ml-3">
+                  <h3 className="text-sm font-medium text-green-800">Verification completed</h3>
+                  <div className="mt-2 text-sm text-green-700">
+                    <p>{signatureMessageResult}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

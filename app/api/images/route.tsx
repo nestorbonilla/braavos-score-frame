@@ -46,7 +46,6 @@ export async function GET(req: NextRequest) {
           alignItems: "stretch", // Stretch items to fill the container height
           width: "100%",
           height: "100vh", // Full viewport height
-          // background: "linear-gradient(to right, #1b4abe, #031846)"
           background: "#242424"
         }}
       >
@@ -58,7 +57,6 @@ export async function GET(req: NextRequest) {
               width: "35%", // Image takes up 40% of the container's width
             }
           }
-          // src="https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/2639523a-690b-47af-16ab-ca07697fd000/original"
           src={sideImage}
         />
         <div
@@ -68,7 +66,7 @@ export async function GET(req: NextRequest) {
               flexDirection: "column",
               justifyContent: "flex-start",
               paddingLeft: 24,
-              paddingRight: 24,
+              paddingRight: 60,
               lineHeight: 1.2,
               fontSize: 36,
               color: "black",
@@ -93,10 +91,11 @@ export async function GET(req: NextRequest) {
               marginTop: 24,
             }}
           >
-            <div style={{ marginTop: 80, color: "white", display: "flex", width: "100%", justifyContent: "space-between", borderBottom: "2px solid white", paddingBottom: "10px", marginBottom: "10px" }}>
-              <div style={{ width: "30%" }}>User</div>
-              <div style={{ width: "30%" }}>Score</div>
-              <div style={{ width: "30%" }}>Last Update</div>
+            <div style={{ marginTop: 30, fontWeight: "bolder", color: "white", display: "flex", width: "100%", justifyContent: "space-between" }}>Braavos Pro Score: Top Players</div>
+            <div style={{ marginTop: 50, color: "white", display: "flex", width: "100%", justifyContent: "space-between", borderBottom: "4px solid white", paddingBottom: "10px", marginBottom: "20px" }}>
+              <div style={{ width: "30%", fontWeight: "bold" }}>User</div>
+              <div style={{ width: "30%", fontWeight: "bold" }}>Score</div>
+              <div style={{ width: "30%", fontWeight: "bold" }}>Last Update</div>
             </div>
             {scores.length > 0 ? (
               scores.map((score: { username: string, score: number, fc_timestamp: string }, index: number) => (

@@ -104,6 +104,7 @@ export async function PATCH(req: Request) {
   console.log("received data... fc_timestamp", fc_timestamp);
   const open = false;
   const supabase = createSupabaseAppServerClient();
+  let successInFlow = true;
 
   // Primero, busca el registro que coincida con `fid`, `timestamp`, y `open` es true
   const { data: findData, error: findError } = await supabase
@@ -115,6 +116,7 @@ export async function PATCH(req: Request) {
     .eq('open', true);
 
   if (findError) {
+    successInFlow = false;
     throw new Error(`Error finding score: ${findError.message}`);
   }
 
@@ -128,8 +130,12 @@ export async function PATCH(req: Request) {
     .eq('username', username)
     .eq('fc_timestamp', fc_timestamp);
     
+    if (updateError) {
+      successInFlow = false;
+      throw new Error(`Error finding score: ${updateError.message}`);
+    }
   }
-  return new Response(JSON.stringify({ success: true, message: "Record updated successfully" }), {
+  return new Response(JSON.stringify({ success: successInFlow, message: "Leaderboard updated. Close tab and refresh frame." }), {
     status: 200,
     headers: { 'Content-Type': 'application/json' },
   });

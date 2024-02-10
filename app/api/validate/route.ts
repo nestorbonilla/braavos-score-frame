@@ -42,7 +42,6 @@ export async function POST(req: NextRequest) {
         username,
         fc_timestamp
       });
-      console.log("newRow: ", newRow);
       await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/database`, {
         method: 'POST',
         headers: {
@@ -50,11 +49,7 @@ export async function POST(req: NextRequest) {
         },
         body: newRow,
       })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log("data from api/database:");
-          console.log(data);
-        });
+        .then((res) => res.json());
       return new Response(JSON.stringify({ fid, username, fc_timestamp }), {
         status: 200,
         headers: { 'Content-Type': 'application/json' }

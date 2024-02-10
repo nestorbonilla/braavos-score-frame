@@ -5,6 +5,10 @@ let imageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/images`;
 
 let frameMetadata = getFrameMetadata({
   buttons: [
+    // {
+    //   label: "Refresh Leaderboard",
+    //   action: "post_redirect",
+    // },
     {
 
       label: "Connects Braavos Wallet",

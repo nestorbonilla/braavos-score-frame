@@ -107,7 +107,6 @@ export default function VerifyPage({ params }: { params: { message: string } }) 
               </StarknetProvider>
             )}
 
-            {/* Table block */}
             <div className="mt-8">
               <div className="inline-block min-w-full align-middle">
                 <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
@@ -123,7 +122,7 @@ export default function VerifyPage({ params }: { params: { message: string } }) 
                       {scores.map((score: { username: string, score: number, fc_timestamp: string }) => (
                         <tr key={score.username}>
                           <td className="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{score.username}</td>
-                          <td className="px-3 py-4 text-sm text-gray-500">{score.score}</td>
+                          <td className="px-3 py-4 text-sm text-gray-500">{score.score} / 100</td>
                           <td className="px-3 py-4 text-sm text-gray-500">{new Date(score.fc_timestamp).toLocaleDateString('en-US', {
                             year: 'numeric',
                             month: 'long',
