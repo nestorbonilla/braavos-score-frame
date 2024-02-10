@@ -14,16 +14,18 @@ let interBold = fs.readFileSync(interBoldPath);
 const sideImage = `${process.env.NEXT_PUBLIC_BASE_URL}/braavos_logo.png`;
 
 export async function GET(req: NextRequest) {
-  let scores = [{
-    user: "@0xNestor",
-    score: "30",
-    lastUpdate: "2024-02-10"
-  }, {
-    user: "@User2",
-    score: "88",
-    lastUpdate: "2024-02-12"
-  }];
-  let table = createScoresTable(scores);
+
+  const scores = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/database`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    }
+  })
+    .then((res) => res.json())
+    .then((res) => {
+      return res.data;
+    });
+  // console.log("scores: ", scores);
   return new ImageResponse(
     (
       <div
@@ -64,8 +66,38 @@ export async function GET(req: NextRequest) {
             }
           }
         >
-          {table}
-
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              paddingLeft: 24,
+              paddingRight: 24,
+              lineHeight: 1.2,
+              fontSize: 36,
+              color: "black",
+              flex: 1,
+              overflow: "hidden",
+              marginTop: 24,
+            }}
+          >
+            <div style={{ marginTop: 80, color: "white", display: "flex", width: "100%", justifyContent: "space-between", borderBottom: "2px solid white", paddingBottom: "10px", marginBottom: "10px" }}>
+              <div style={{ width: "30%" }}>User</div>
+              <div style={{ width: "30%" }}>Score</div>
+              <div style={{ width: "30%" }}>Last Update</div>
+            </div>
+            {scores.length > 0 ? (
+              scores.map((score: { fid: number, score: number, fc_timestamp: number }, index: number) => (
+                <div key={index} style={{ color: "white", display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
+                  <span style={{ width: '30%' }}>{score.fid}</span>
+                  <span style={{ width: '30%' }}>{score.score} / 100</span>
+                  <span style={{ width: '30%' }}>{score.fc_timestamp}</span>
+                </div>
+              ))
+            ) : (
+              <div style={{ color: "white", display: 'flex', justifyContent: 'center' }}>No hay elementos para mostrar.</div>
+            )}
+          </div>
         </div>
       </div>
     ),
@@ -87,42 +119,5 @@ export async function GET(req: NextRequest) {
         },
       ],
     }
-  );
-}
-
-function createScoresTable(scores: any) {
-  return (
-    <div
-      style={
-        {
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-start",
-          paddingLeft: 24,
-          paddingRight: 24,
-          lineHeight: 1.2,
-          fontSize: 36,
-          color: "black",
-          flex: 1,
-          overflow: "hidden",
-          marginTop: 24,
-        }
-      }
-    >
-      <div style={{ marginTop: 80, color: "white", display: "flex", width: "100%", justifyContent: "space-between", borderBottom: "2px solid white", paddingBottom: "10px", marginBottom: "10px" }}>
-        <div style={{ width: "30%" }}>User</div>
-        <div style={{ width: "30%" }}>Score</div>
-        <div style={{ width: "30%" }}>Last Update</div>
-      </div>
-      {scores.map(function (score: any, index: any, array: any) {
-        return (
-          <div key={index} style={{ color: "white", display: "flex", width: "100%", justifyContent: "space-between", marginBottom: "5px" }}>
-            <div style={{ width: "30%" }}>{score.user}</div>
-            <div style={{ width: "30%" }}>{score.score}</div>
-            <div style={{ width: "30%" }}>{score.lastUpdate}</div>
-          </div>
-        )
-      })}
-    </div>
   );
 }
