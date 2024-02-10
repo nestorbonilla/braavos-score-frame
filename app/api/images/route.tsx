@@ -1,15 +1,16 @@
 import { NextRequest } from "next/server";
 import { ImageResponse } from "next/og";
-import { join } from "path";
-import * as fs from "fs";
+// import { join } from "path";
+// import * as fs from "fs";
 
+export const runtime = 'edge';
 export const dynamic = "force-dynamic";
 
-const interRegPath = join(process.cwd(), "public/Inter-Regular.ttf");
-let interReg = fs.readFileSync(interRegPath);
+// const interRegPath = join(process.cwd(), "public/Inter-Regular.ttf");
+// let interReg = fs.readFileSync(interRegPath);
 
-const interBoldPath = join(process.cwd(), "public/Inter-Bold.ttf");
-let interBold = fs.readFileSync(interBoldPath);
+// const interBoldPath = join(process.cwd(), "public/Inter-Bold.ttf");
+// let interBold = fs.readFileSync(interBoldPath);
 
 const sideImage = `${process.env.NEXT_PUBLIC_BASE_URL}/braavos_logo.png`;
 
@@ -22,6 +23,9 @@ function formatTimestampToUS(timestamp: string): string {
   });
 }
 export async function GET(req: NextRequest) {
+
+  console.log("___________________________");
+  console.log("accessing api/images...");
 
   let scores = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/database`, {
     method: "GET",
@@ -36,9 +40,8 @@ export async function GET(req: NextRequest) {
         fc_timestamp: formatTimestampToUS(score.fc_timestamp),
       }));
     });
-
+  console.log("scores: ", scores);
   let imageResponse = new ImageResponse(
-
     (
       <div
         style={{
@@ -117,22 +120,22 @@ export async function GET(req: NextRequest) {
     {
       width: 1528,
       height: 800,
-      fonts: [
-        {
-          name: "Inter",
-          data: interReg,
-          weight: 400,
-          style: "normal",
-        },
-        {
-          name: "Inter",
-          data: interBold,
-          weight: 800,
-          style: "normal",
-        },
-      ],
+      // fonts: [
+      //   {
+      //     name: "Inter",
+      //     data: interReg,
+      //     weight: 400,
+      //     style: "normal",
+      //   },
+      //   {
+      //     name: "Inter",
+      //     data: interBold,
+      //     weight: 800,
+      //     style: "normal",
+      //   },
+      // ],
     }
   );
-  // imageResponse.headers.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+  imageResponse.headers.set('Cache-Control', 'no-cache, no-store, must-revalidate');
   return imageResponse
 }

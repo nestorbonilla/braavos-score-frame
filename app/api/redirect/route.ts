@@ -1,4 +1,6 @@
 
+import { getFrameMetadata } from '@coinbase/onchainkit';
+
 export async function POST(req: Request) {
   let body = await req.json();
   console.log("accessing api/redirect post...");
@@ -19,8 +21,8 @@ export async function POST(req: Request) {
   if (signedMessage.untrustedData.buttonIndex == 1) {
     // Refresh image
     console.log("should refresh image");
-    let frame = `${process.env.NEXT_PUBLIC_BASE_URL}/api/frame`;
     let imageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/images`;
+    
     return new Response(
       `
       <!DOCTYPE html>
@@ -31,16 +33,14 @@ export async function POST(req: Request) {
               <meta property="og:image" content="${imageUrl}" />
               <meta name="fc:frame" content="vNext">
               <meta name="fc:frame:image" content="${imageUrl}">
-              <meta name="fc:frame:post_url" content="${
-                process.env.NEXT_PUBLIC_BASE_URL
-              }/api/image">
-              <meta name="fc:frame:button:1" content="Option A">
-              <meta name="fc:frame:button:2" content="Option B">
-              <meta name="fc:frame:button:3" content="Option C">
-              <meta name="fc:frame:button:4" content="Option D">
+              <meta name="fc:frame:post_url" content="${process.env.NEXT_PUBLIC_BASE_URL}/api/redirect">
+              <meta name="fc:frame:button:1" content="Refresh Leaderboard">
+              <meta name="fc:frame:button:1:action" content="post">
+              <meta name="fc:frame:button:2" content="Connects Braavos Wallet">
+              <meta name="fc:frame:button:2:action" content="post_redirect">
           </head>
       <body>
-      <p> Let's start creating a story </p>
+      <p> Something here </p>
       </body>
       </html>
   `,
