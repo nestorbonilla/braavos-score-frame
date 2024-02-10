@@ -5,10 +5,10 @@ let imageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/images`;
 
 let frameMetadata = getFrameMetadata({
   buttons: [
-    // {
-    //   label: "Refresh Leaderboard",
-    //   action: "post_redirect",
-    // },
+    {
+      label: "Refresh Leaderboard",
+      target: "post",
+    },
     {
 
       label: "Connects Braavos Wallet",
@@ -17,6 +17,7 @@ let frameMetadata = getFrameMetadata({
   ],
   image: imageUrl,
   post_url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/redirect`,
+  // post_url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/frame`,
 });
 
 export const metadata: Metadata = {

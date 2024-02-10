@@ -133,6 +133,6 @@ export async function GET(req: NextRequest) {
       ],
     }
   );
-  imageResponse.headers.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+  // imageResponse.headers.set('Cache-Control', 'no-cache, no-store, must-revalidate');
   return imageResponse
 }

@@ -4,7 +4,7 @@ interface ScoreRecord {
   id: number;
   sn_address: string;
   score: number;
-  fc_timestamp: Date; // Asumiendo que es una cadena; ajusta según sea necesario
+  fc_timestamp: string;
   open: boolean;
 }
 

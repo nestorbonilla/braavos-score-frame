@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: NextRequest): Promise<Response> {
-  let searchParams = req.nextUrl.searchParams;
+export async function getResponse(req: NextRequest): Promise<NextResponse> {
+  // let searchParams = req.nextUrl.searchParams;
   // let id: any = searchParams.get("id");
   // let idAsNumber = parseInt(id);
   // let nextId = idAsNumber + 1;
   let imageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/images`;
+  // console.log(`next post_url: "${process.env.NEXT_PUBLIC_BASE_URL}/api/frame?id=${nextId}"`);
 
   return new NextResponse(`
     <!DOCTYPE html>
@@ -20,4 +21,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     </html>`);
 }
 
+export async function POST(req: NextRequest): Promise<Response> {
+  return getResponse(req);
+}
 export const dynamic = "force-dynamic";
