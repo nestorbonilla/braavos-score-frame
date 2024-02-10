@@ -22,10 +22,11 @@ interface StarknetProScoreResponse {
 
 type FarcasterData = {
   fid: number;
+  username: string;
   timestamp: number;
 };
 
-function ConnectWallet({ fid, timestamp }: FarcasterData) {
+function ConnectWallet({ fid, username, timestamp }: FarcasterData) {
   const [validSignature, setValidSignature] = useState(false);
   const { connect } = useConnect();
   const { disconnect } = useDisconnect();
@@ -69,35 +70,6 @@ function ConnectWallet({ fid, timestamp }: FarcasterData) {
     await disconnect();
   };
 
-  // const addMapping = async (fid: number, starknetAddress: string, score: number, timestamp: number) => {
-  //   try {
-  //     const response = await fetch("/api/database", {
-  //       method: 'PATCH',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({ fid, starknetAddress, score, timestamp: 1707455233004 }),
-  //     })
-  //       .then((res) => res.json())
-  //       .then((data) => {
-  //         console.log("data from api/database:");
-  //         console.log(data);
-  //       });
-
-
-  //     // if (!response.ok) {
-  //     //   throw new Error("Network response was not ok");
-  //     // }
-
-  //     // return response.json();
-  //   } catch (error) {
-  //     console.error("Failed to add mapping:", error);
-  //   }
-  // };
-
-
-
-
   const verifySignature = async (
     contractAddress: string,
     signature: Signature
@@ -120,28 +92,21 @@ function ConnectWallet({ fid, timestamp }: FarcasterData) {
         `Successfully verified ownership of address: ${address}`
       );
 
-      // console.log("To store on db: ", fid, contractAddress, score);
+      console.log("To store on db: ", fid, contractAddress, score);
       // Store the result in a database
       try {
-        const response = await fetch("/api/database", {
+        await fetch("/api/database", {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ fid, starknetAddress: contractAddress, score, timestamp: 1707455233004 }),
+          body: JSON.stringify({ fid, username, sn_address: contractAddress, score, fc_timestamp: 1707455233004 }),
         })
           .then((res) => res.json())
           .then((data) => {
             console.log("data from api/database:");
             console.log(data);
           });
-
-
-        // if (!response.ok) {
-        //   throw new Error("Network response was not ok");
-        // }
-
-        // return response.json();
       } catch (error) {
         console.error("Failed to add mapping:", error);
       }
@@ -160,19 +125,7 @@ function ConnectWallet({ fid, timestamp }: FarcasterData) {
 
   useEffect(() => {
     if (data && address) {
-      // if there's an address then we try to get the score
-      if (typeof window !== 'undefined' && window.starknet_braavos) {
-        // console.log("Requesting Starknet Pro Score: ", window.starknet_braavos);
-        (window.starknet_braavos.request as any)({ type: "wallet_getStarknetProScore" })
-          .then((res: StarknetProScoreResponse) => {
-            console.log(res.score);
-            setScore(res.score);
-          })
-          .catch((error: Error) => {
-            console.error("Error fetching Starknet Pro Score:", error);
-            setScore(0);
-          });
-      }
+
       // then we try to verify the signature
       console.log("going to callVerifying signature...");
       console.log("address: ", address);
@@ -180,6 +133,23 @@ function ConnectWallet({ fid, timestamp }: FarcasterData) {
       verifySignature(address!, data);
     }
   }, [data]);
+
+  useEffect(() => {
+    console.log("accessing the useEffect() to get the score ");
+    // if there's an address then we try to get the score
+    if (typeof window !== 'undefined' && window.starknet_braavos) {
+      // console.log("Requesting Starknet Pro Score: ", window.starknet_braavos);
+      (window.starknet_braavos.request as any)({ type: "wallet_getStarknetProScore" })
+        .then((res: StarknetProScoreResponse) => {
+          console.log("finding score...", res.score);
+          setScore(res.score);
+        })
+        .catch((error: Error) => {
+          console.error("Error fetching Starknet Pro Score:", error);
+          setScore(0);
+        });
+    }
+  }, [address]);
 
   return (
     <div

@@ -46,48 +46,49 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   console.log("accessing api/database post...");
   const body = await req.json();
-  const { fid, timestamp } = body;
+  const { fid, username, fc_timestamp } = body;
   const supabase = createSupabaseAppServerClient();
 
   const { data: findData, error: findError } = await supabase
     .from('scores')
     .select('*')
-    .eq('fid', fid);
+    .eq('fid', fid)
+    .eq('username', username)
+    .eq('fc_timestamp', fc_timestamp);
 
   if (findError) {
     throw new Error(`Error finding score: ${findError.message}`);
   }
-  console.log("during select in api/database post...");
-  console.log(findData.length);
-
-  if (findData.length > 0) {
-    // Registro ya existe, no insertar
-    return new Response(JSON.stringify({ success: false, message: "Record already exists" }), {
-      status: 409, // Conflicto
-      headers: { 'Content-Type': 'application/json' },
-    });
-  }
-  // Si no encuentra un registro, o hay más de uno, no procede a actualizar
   
-    const { data: insertData, error: insertError } = await supabase
+  let newRecord = false;
+  if (findData.length == 0) {
+    await supabase
     .from('scores')
     .insert([
       {
         fid: fid,
+        username: username,
         sn_address: '',
         score: 0,
         open: true,
-        fc_timestamp: timestamp,
+        fc_timestamp: fc_timestamp,
       },
     ]);
-    return new Response(JSON.stringify({ success: true, fid, timestamp }));
-  
+    newRecord = true;
+  }
+  return new Response(JSON.stringify({ success: true, isNewRecord: newRecord }));
 }
 
 export async function PATCH(req: Request) {
   console.log("accessing api/database patch...");
+  
   const body = await req.json();
-  const { fid, sn_address, score, timestamp } = body;
+  const { fid, username, sn_address, score, fc_timestamp } = body;
+  console.log("received data... fid", fid);
+  console.log("received data... username", username);
+  console.log("received data... sn_address", sn_address);
+  console.log("received data... score", score);
+  console.log("received data... fc_timestamp", fc_timestamp);
   const open = false;
   const supabase = createSupabaseAppServerClient();
 
@@ -96,33 +97,32 @@ export async function PATCH(req: Request) {
     .from('scores')
     .select('*')
     .eq('fid', fid)
-    .eq('timestamp', timestamp)
+    .eq('username', username)
+    .eq('fc_timestamp', fc_timestamp)
     .eq('open', true);
+    
+    console.log("findData: ", findData);
+    console.log("findError: ", findError);
 
   if (findError) {
     throw new Error(`Error finding score: ${findError.message}`);
   }
 
   // Si no encuentra un registro, o hay más de uno, no procede a actualizar
-  if (!findData || findData.length !== 1) {
-    return new Response(JSON.stringify({ success: false, message: "No matching record found or multiple records found." }), {
-      status: 404,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  }
-
-  // Si encuentra el registro y cumple con las condiciones, procede a actualizar
-  const { data, error } = await supabase
+  if (findData && findData.length == 1) {
+    // Si encuentra el registro y cumple con las condiciones, procede a actualizar
+    const { data: udpateData, error: updateError } = await supabase
     .from('scores')
     .update({ sn_address, score, open })
     .eq('fid', fid)
-    .eq('fc_timestamp', timestamp);
-
-  if (error) {
-    throw new Error(`Error updating score: ${error.message}`);
+    .eq('username', username)
+    .eq('fc_timestamp', fc_timestamp);
+    
+    console.log("udpateData: ", udpateData);
+    console.log("updateError: ", updateError);
+    
   }
-
-  return new Response(JSON.stringify({ success: true, message: "Record updated successfully", data }), {
+  return new Response(JSON.stringify({ success: true, message: "Record updated successfully" }), {
     status: 200,
     headers: { 'Content-Type': 'application/json' },
   });

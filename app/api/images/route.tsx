@@ -87,9 +87,9 @@ export async function GET(req: NextRequest) {
               <div style={{ width: "30%" }}>Last Update</div>
             </div>
             {scores.length > 0 ? (
-              scores.map((score: { fid: number, score: number, fc_timestamp: number }, index: number) => (
+              scores.map((score: { username: string, score: number, fc_timestamp: number }, index: number) => (
                 <div key={index} style={{ color: "white", display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
-                  <span style={{ width: '30%' }}>{score.fid}</span>
+                  <span style={{ width: '30%' }}>{score.username}</span>
                   <span style={{ width: '30%' }}>{score.score} / 100</span>
                   <span style={{ width: '30%' }}>{score.fc_timestamp}</span>
                 </div>

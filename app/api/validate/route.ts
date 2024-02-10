@@ -28,59 +28,39 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    // const buffer = Buffer.from(messageBytes, "hex");
     const client = new NeynarAPIClient(process.env.NEYNAR_API_KEY!);
     const response = await client.validateFrameAction(messageBytes);
-    // console.log("response: ", response);
+    console.log("response: ", response);
     
     if (response.valid) {
       let fid = response.action?.interactor.fid;
-      let timestamp = 1707455233004;
+      let username = response.action?.interactor.username;
+      let fc_timestamp = 1707455233004;
       let newRow = JSON.stringify({
         fid,
-        timestamp
+        username,
+        fc_timestamp
       });
       console.log("newRow: ", newRow);
-      const dbResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/database`, {
+      await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/database`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: newRow,
       })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("data from api/database:");
-        console.log(data);
-      });
-
-      // if (!dbResponse.success) {
-      //   throw new Error('Error al insertar datos');
-      // }
-      return new Response(JSON.stringify({ fid, timestamp }), {
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("data from api/database:");
+          console.log(data);
+        });
+      return new Response(JSON.stringify({ fid, username, fc_timestamp }), {
         status: 200,
         headers: { 'Content-Type': 'application/json' }
       });
-      
     } else {
       throw new Error(`HTTP error! status: ${response}`);
     }
-
-    // const data = await response.json();
-
-    // if (data && data.valid) {
-    //   // Procesa y devuelve la respuesta adecuada.
-    //   return new Response(JSON.stringify({ fid: data.message.data.fid, timestamp: data.message.data.timestamp }), {
-    //     status: 200,
-    //     headers: { 'Content-Type': 'application/json' }
-    //   });
-    // } else {
-    //   // Maneja la respuesta no válida.
-    //   return new Response(JSON.stringify({ error: "Invalid message" }), {
-    //     status: 400,
-    //     headers: { 'Content-Type': 'application/json' }
-    //   });
-    // }
   } catch (e) {
     console.error('Error validating message:', e);
     return new Response(JSON.stringify({ error: `Failed to validate message: ${e}` }), {
