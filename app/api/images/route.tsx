@@ -37,7 +37,8 @@ export async function GET(req: NextRequest) {
       }));
     });
 
-  return new ImageResponse(
+  let imageResponse = new ImageResponse(
+
     (
       <div
         style={{
@@ -132,4 +133,6 @@ export async function GET(req: NextRequest) {
       ],
     }
   );
+  imageResponse.headers.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+  return imageResponse
 }
