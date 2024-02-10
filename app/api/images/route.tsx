@@ -37,7 +37,6 @@ export async function GET(req: NextRequest) {
       }));
     });
 
-  // console.log("scores: ", scores);
   return new ImageResponse(
     (
       <div

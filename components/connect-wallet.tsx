@@ -5,6 +5,7 @@ import {
   useConnect,
   useDisconnect,
   useSignTypedData,
+  Connector,
 } from "@starknet-react/core";
 import { useStarknetkitConnectModal } from "starknetkit";
 import {
@@ -28,7 +29,7 @@ type FarcasterData = {
 
 function ConnectWallet({ fid, username, timestamp }: FarcasterData) {
   const [validSignature, setValidSignature] = useState(false);
-  const { connect } = useConnect();
+  const { connect, connectors } = useConnect();
   const { disconnect } = useDisconnect();
   const { address, isConnected } = useAccount();
   const [score, setScore] = useState(0);
@@ -163,19 +164,35 @@ function ConnectWallet({ fid, username, timestamp }: FarcasterData) {
       {/* {address && <p style={{ marginBottom: "15px" }}>Address: {address}</p>} */}
 
       {!isConnected ? (
-        <button
-          onClick={connectWallet}
-          style={{
-            padding: "10px 15px",
-            cursor: "pointer",
-            backgroundColor: "black",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-          }}
-        >
-          Connect to Starknet
-        </button>
+        connectors
+          .filter((connector: Connector) => connector.name.toLowerCase().includes('braavos'))
+          .map((connector: Connector) => (
+            <button
+              key={connector.id}
+              onClick={() => connect({ connector })}
+              disabled={!connector.available()}
+              style={{
+                padding: "12px 24px",
+                cursor: "pointer",
+                backgroundColor: "#4CAF50", // Un verde brillante que sugiere acción
+                color: "white",
+                border: "none",
+                borderRadius: "8px",
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)", // Una sombra suave para dar profundidad
+                fontSize: "16px", // Un tamaño de fuente más grande para mejorar la legibilidad
+                fontWeight: "bold", // Fuente en negrita para destacar
+                display: "flex", // Utiliza flex para alinear el icono y el texto
+                alignItems: "center", // Alinea verticalmente el icono y el texto
+                justifyContent: "center", // Centra el contenido del botón
+                transition: "background-color 0.3s", // Suaviza el cambio de color al hacer hover
+              }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#45a049"} // Oscurece el botón al hacer hover para sugerir interactividad
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#4CAF50"} // Restaura el color original al quitar el hover
+            >
+              <img src={connector.icon.dark} alt={`Connect ${connector.name}`} style={{ marginRight: "8px", width: "20px", height: "20px" }} />
+              Connect {connector.name}
+            </button>
+          ))
       ) : (
         <div>
           {validSignature ? (
