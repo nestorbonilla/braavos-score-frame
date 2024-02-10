@@ -51,11 +51,17 @@ function ConnectWallet({ fid, username, timestamp }: FarcasterData) {
       ],
       Verification: [
         { name: "fid", type: "felt" },
+        { name: "username", type: "felt" },
+        { name: "address", type: "felt" },
+        { name: "score", type: "felt" },
         { name: "timestamp", type: "felt" },
       ],
     },
     message: {
       fid,
+      username,
+      address,
+      score,
       timestamp,
     },
     primaryType: "Verification",
@@ -89,9 +95,9 @@ function ConnectWallet({ fid, username, timestamp }: FarcasterData) {
       await contract.isValidSignature(msgHash, signature);
       setValidSignature(true);
       // Get the score of Braavos Wallet
-      window.alert(
-        `Successfully verified ownership of address: ${address}`
-      );
+      // window.alert(
+      //   `Successfully verified ownership of address: ${address}`
+      // );
 
       console.log("To store on db: ", fid, contractAddress, score);
       // Store the result in a database
@@ -168,26 +174,11 @@ function ConnectWallet({ fid, username, timestamp }: FarcasterData) {
           .filter((connector: Connector) => connector.name.toLowerCase().includes('braavos'))
           .map((connector: Connector) => (
             <button
+              type="button"
               key={connector.id}
               onClick={() => connect({ connector })}
               disabled={!connector.available()}
-              style={{
-                padding: "12px 24px",
-                cursor: "pointer",
-                backgroundColor: "#4CAF50", // Un verde brillante que sugiere acción
-                color: "white",
-                border: "none",
-                borderRadius: "8px",
-                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)", // Una sombra suave para dar profundidad
-                fontSize: "16px", // Un tamaño de fuente más grande para mejorar la legibilidad
-                fontWeight: "bold", // Fuente en negrita para destacar
-                display: "flex", // Utiliza flex para alinear el icono y el texto
-                alignItems: "center", // Alinea verticalmente el icono y el texto
-                justifyContent: "center", // Centra el contenido del botón
-                transition: "background-color 0.3s", // Suaviza el cambio de color al hacer hover
-              }}
-              onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#45a049"} // Oscurece el botón al hacer hover para sugerir interactividad
-              onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#4CAF50"} // Restaura el color original al quitar el hover
+              className="inline-flex items-center gap-x-2 rounded-md bg-[#031846] px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               <img src={connector.icon.dark} alt={`Connect ${connector.name}`} style={{ marginRight: "8px", width: "20px", height: "20px" }} />
               Connect {connector.name}
@@ -201,24 +192,13 @@ function ConnectWallet({ fid, username, timestamp }: FarcasterData) {
           ) : (
             <button
               onClick={() => {
-                // console.log("button pressed");
-                // console.log("timeValid: ", timeValid(timestamp));
-                console.log("timestamp: ", timestamp);
                 if (timeValid(new Date(timestamp).getTime())) {
                   console.log("timestamp is valid! ");
                   signTypedData();
                 }
               }}
               disabled={!address}
-              style={{
-                padding: "10px 15px",
-                cursor: "pointer",
-                backgroundColor: "black",
-                color: "white",
-                border: "none",
-                borderRadius: "5px",
-                marginBottom: "10px",
-              }}
+              className="inline-flex items-center gap-x-2 rounded-md bg-green-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
             >
               {isPending ? "Waiting for wallet..." : "Verify address ownership"}
             </button>
@@ -226,16 +206,9 @@ function ConnectWallet({ fid, username, timestamp }: FarcasterData) {
           <br />
           <button
             onClick={disconnectWallet}
-            style={{
-              padding: "10px 15px",
-              cursor: "pointer",
-              backgroundColor: "#f44336",
-              color: "white",
-              border: "none",
-              borderRadius: "5px",
-            }}
+            className="inline-flex items-center gap-x-2 rounded-md bg-[#031846] px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Disconnect wallet
+            Disconnect Wallet
           </button>
         </div>
       )}

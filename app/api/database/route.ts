@@ -45,24 +45,33 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   console.log("accessing api/database post...");
-  const body = await req.json();
-  const { fid, username, fc_timestamp } = body;
-  const supabase = createSupabaseAppServerClient();
-
-  const { data: findData, error: findError } = await supabase
+  let body = await req.json();
+  let { fid, username, fc_timestamp } = body;
+  let supabase = createSupabaseAppServerClient();
+  let newRecord = false;
+  
+  // 1. Search for existing scores with same fid and username
+  let { data: existingScoresData, error: existingScoresError } = await supabase
     .from('scores')
     .select('*')
     .eq('fid', fid)
-    .eq('username', username)
-    .eq('fc_timestamp', fc_timestamp);
+    .eq('username', username);
 
-  if (findError) {
-    throw new Error(`Error finding score: ${findError.message}`);
+  if (existingScoresError) {
+    console.error(`Error finding score: ${existingScoresError.message}`);
   }
   
-  let newRecord = false;
-  if (findData.length == 0) {
-    await supabase
+  // 2. Check if there is a recent score (24 hours)
+  const now = new Date();
+  const twentyFourHoursAgo = new Date(now.getTime() - (24 * 60 * 60 * 1000));
+  const isRecentScore = existingScoresData!.some(score => {
+    const scoreTimestamp = new Date(score.fc_timestamp);
+    return scoreTimestamp > twentyFourHoursAgo;
+  });
+  
+  // 3. Insert a new record if there is no recent score
+  if (!isRecentScore) {
+    const { error: insertError } = await supabase
     .from('scores')
     .insert([
       {
@@ -74,7 +83,11 @@ export async function POST(req: Request) {
         fc_timestamp: fc_timestamp,
       },
     ]);
-    newRecord = true;
+    if (insertError) {
+      console.error(`Error inserting score: ${insertError.message}`);
+    } else {
+      newRecord = true;
+    }
   }
   return new Response(JSON.stringify({ success: true, isNewRecord: newRecord }));
 }
@@ -100,9 +113,6 @@ export async function PATCH(req: Request) {
     .eq('username', username)
     .eq('fc_timestamp', fc_timestamp)
     .eq('open', true);
-    
-    console.log("findData: ", findData);
-    console.log("findError: ", findError);
 
   if (findError) {
     throw new Error(`Error finding score: ${findError.message}`);
@@ -117,9 +127,6 @@ export async function PATCH(req: Request) {
     .eq('fid', fid)
     .eq('username', username)
     .eq('fc_timestamp', fc_timestamp);
-    
-    console.log("udpateData: ", udpateData);
-    console.log("updateError: ", updateError);
     
   }
   return new Response(JSON.stringify({ success: true, message: "Record updated successfully" }), {

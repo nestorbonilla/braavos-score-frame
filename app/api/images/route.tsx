@@ -23,7 +23,7 @@ function formatTimestampToUS(timestamp: string): string {
 }
 export async function GET(req: NextRequest) {
 
-  const scores = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/database`, {
+  let scores = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/database`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -46,7 +46,8 @@ export async function GET(req: NextRequest) {
           alignItems: "stretch", // Stretch items to fill the container height
           width: "100%",
           height: "100vh", // Full viewport height
-          background: "linear-gradient(to right, #1b4abe, #031846)"
+          // background: "linear-gradient(to right, #1b4abe, #031846)"
+          background: "#242424"
         }}
       >
         <img

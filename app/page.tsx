@@ -1,8 +1,7 @@
 import { getFrameMetadata } from '@coinbase/onchainkit';
 import type { Metadata } from 'next';
 
-let imageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/images?date=${Date.now()}`;
-// let imageUrl = `${process.env.NEXT_PUBLIC_GATEWAY_URL}/ipfs/QmPCKukNRRynvEwSnuFPe5hyx2JDnWphtDGjQVf66LV88L/starknet_1.png`;
+let imageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/images`;
 
 let frameMetadata = getFrameMetadata({
   buttons: [

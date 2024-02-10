@@ -30,13 +30,12 @@ export async function POST(req: NextRequest) {
   try {
     const client = new NeynarAPIClient(process.env.NEYNAR_API_KEY!);
     const response = await client.validateFrameAction(messageBytes);
-    console.log("response: ", response);
     
     if (response.valid) {
       let fid = response.action?.interactor.fid;
       let username = response.action?.interactor.username;
-      // let fc_timestamp = response.action?.timestamp;
-      let fc_timestamp = '2024-02-10T07:44:59.000Z';
+      let fc_timestamp = response.action?.timestamp;
+      // let fc_timestamp = '2024-02-10T07:44:59.000Z';
       
       let newRow = JSON.stringify({
         fid,
