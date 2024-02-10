@@ -3,8 +3,13 @@ import { ImageResponse } from "next/og";
 // import { join } from "path";
 // import * as fs from "fs";
 
-export const runtime = 'edge';
 export const dynamic = "force-dynamic";
+export const revalidate = 3;
+export const runtime = 'edge';
+
+// export const config = {
+//   runtime: 'experimental-edge',
+// }
 
 // const interRegPath = join(process.cwd(), "public/Inter-Regular.ttf");
 // let interReg = fs.readFileSync(interRegPath);
@@ -41,7 +46,7 @@ export async function GET(req: NextRequest) {
       }));
     });
   console.log("scores: ", scores);
-  let imageResponse = new ImageResponse(
+  return new ImageResponse(
     (
       <div
         style={{
@@ -136,6 +141,6 @@ export async function GET(req: NextRequest) {
       // ],
     }
   );
-  imageResponse.headers.set('Cache-Control', 'no-cache, no-store, must-revalidate');
-  return imageResponse
+  // imageResponse.headers.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+  // return imageResponse;
 }
