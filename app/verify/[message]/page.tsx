@@ -11,7 +11,7 @@ export default function VerifyPage({ params }: { params: { message: string } }) 
   const [invalidVerification, setInvalidVerification] = useState(false);
   const [fid, setFid] = useState(0);
   const [username, setUsername] = useState("");
-  const [fcTimestamp, setFCTimestamp] = useState(0);
+  const [fcTimestamp, setFCTimestamp] = useState("");
   const fetchCalled = useRef(false);
 
   const fetchValidate = async () => {

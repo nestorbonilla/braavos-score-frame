@@ -23,7 +23,7 @@ interface StarknetProScoreResponse {
 type FarcasterData = {
   fid: number;
   username: string;
-  timestamp: number;
+  timestamp: string;
 };
 
 function ConnectWallet({ fid, username, timestamp }: FarcasterData) {
@@ -100,7 +100,7 @@ function ConnectWallet({ fid, username, timestamp }: FarcasterData) {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ fid, username, sn_address: contractAddress, score, fc_timestamp: 1707455233004 }),
+          body: JSON.stringify({ fid, username, sn_address: contractAddress, score, fc_timestamp: timestamp }),
         })
           .then((res) => res.json())
           .then((data) => {
@@ -187,7 +187,7 @@ function ConnectWallet({ fid, username, timestamp }: FarcasterData) {
                 // console.log("button pressed");
                 // console.log("timeValid: ", timeValid(timestamp));
                 console.log("timestamp: ", timestamp);
-                if (timeValid(timestamp)) {
+                if (timeValid(new Date(timestamp).getTime())) {
                   console.log("timestamp is valid! ");
                   signTypedData();
                 }

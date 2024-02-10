@@ -13,6 +13,14 @@ let interBold = fs.readFileSync(interBoldPath);
 
 const sideImage = `${process.env.NEXT_PUBLIC_BASE_URL}/braavos_logo.png`;
 
+function formatTimestampToUS(timestamp: string): string {
+  const date = new Date(timestamp);
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+}
 export async function GET(req: NextRequest) {
 
   const scores = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/database`, {
@@ -23,8 +31,12 @@ export async function GET(req: NextRequest) {
   })
     .then((res) => res.json())
     .then((res) => {
-      return res.data;
+      return res.data.map((score: { username: string, score: number, fc_timestamp: string }) => ({
+        ...score,
+        fc_timestamp: formatTimestampToUS(score.fc_timestamp),
+      }));
     });
+
   // console.log("scores: ", scores);
   return new ImageResponse(
     (
@@ -87,7 +99,7 @@ export async function GET(req: NextRequest) {
               <div style={{ width: "30%" }}>Last Update</div>
             </div>
             {scores.length > 0 ? (
-              scores.map((score: { username: string, score: number, fc_timestamp: number }, index: number) => (
+              scores.map((score: { username: string, score: number, fc_timestamp: string }, index: number) => (
                 <div key={index} style={{ color: "white", display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
                   <span style={{ width: '30%' }}>{score.username}</span>
                   <span style={{ width: '30%' }}>{score.score} / 100</span>
