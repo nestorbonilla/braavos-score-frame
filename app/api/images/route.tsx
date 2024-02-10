@@ -50,6 +50,7 @@ export async function GET(req: NextRequest) {
         }}
       >
         <img
+          alt="Braavos logo"
           style={
             {
               height: "100%", // Make image full height
