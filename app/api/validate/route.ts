@@ -45,7 +45,10 @@ export async function POST(req: NextRequest) {
       await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/database`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "Pragma": "no-cache",
+          "Expires": "0",
         },
         body: newRow,
       })

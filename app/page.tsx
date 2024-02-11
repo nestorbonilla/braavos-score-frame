@@ -1,5 +1,13 @@
 import { getFrameMetadata } from '@coinbase/onchainkit';
 import type { Metadata } from 'next';
+import { getFrameMessage } from "frames.js";
+import {
+  FrameButton,
+  FrameContainer,
+  FrameImage,
+  NextServerPageProps,
+  getPreviousFrame,
+} from "frames.js/next/server";
 
 let imageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/images`;
 
