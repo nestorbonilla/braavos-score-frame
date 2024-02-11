@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
   console.log("___________________________");
   console.log("accessing api/images...");
 
-  console.log("before call api/database...");
+  // Get raw scores from the database
   let response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/api/database`, {
     headers: {
       "Content-Type": "application/json",
@@ -27,14 +27,14 @@ export async function GET(req: NextRequest) {
       "Expires": "0",
     }
   });
-  // console.log("scores: ", response);
-  // Procesa la respuesta y formatea los timestamps
+
+  // Process the scores and its timestamps
   const scores = response.data.data.map((score: { username: string, score: number, fc_timestamp: string }) => ({
     ...score,
     fc_timestamp: formatTimestampToUS(score.fc_timestamp),
   }));
-  // console.log("scores: ", scores);
 
+  // Generate the image and convert it to PNG
   let svg = await generateImage(scores);
   let pngBuffer = await sharp(Buffer.from(svg))
     .toFormat("png")
