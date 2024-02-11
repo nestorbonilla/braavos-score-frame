@@ -6,8 +6,6 @@
       "esnext"
     ],
     "downlevelIteration": true,
-    // asegúrate de que tu target está configurado adecuadamente
-    "target": "es6", // o cualquier target que necesites
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
