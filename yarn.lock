@@ -687,17 +687,17 @@
     "@stablelib/random" "^1.0.2"
     "@stablelib/wipe" "^1.0.1"
 
-"@starknet-react/chains@^0.1.6":
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/@starknet-react/chains/-/chains-0.1.6.tgz#87c47048ba9c58768e1575751938f8892b18e23b"
-  integrity sha512-GcPwa+fldjS6ikWlrC/braCYHuRH2DVwWEyYBUMKv0C7NmmWaRwqOUE6gtCc0t+T2obYTYIiG29huWbAgWq99w==
+"@starknet-react/chains@^0.1.7":
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/@starknet-react/chains/-/chains-0.1.7.tgz#58503379e2ffabe33b4f6e0f2aef775e84745a4d"
+  integrity sha512-UNh97I1SvuJKaAhKOmpEk8JcWuZWMlPG/ba2HcvFYL9x/47BKndJ+Da9V+iJFtkHUjreVnajT1snsaz1XMG+UQ==
 
-"@starknet-react/core@^2.2.4":
-  version "2.2.4"
-  resolved "https://registry.yarnpkg.com/@starknet-react/core/-/core-2.2.4.tgz#2e310e7a79e4fd23c0496a83d389de6f40eb693e"
-  integrity sha512-G+GnEAkrry8mZdtO09gt3S7RZJ8hq4rseUvOOmy+kugBqB++VL5AknC7M1hhrtX/5pqNhduZFWB/Hk7nCNadEg==
+"@starknet-react/core@^2.2.5":
+  version "2.2.5"
+  resolved "https://registry.yarnpkg.com/@starknet-react/core/-/core-2.2.5.tgz#ba8de39a264dabffd70310d8a5848ef2861b4f8d"
+  integrity sha512-EyL7YPfW7rkP5oPg9nPGKyHuGc+auoe4SZ+/HUrzBAsK+EqtSRaJyHMpEVcRVxzeknXdo6GqddnTCULFM4dn3Q==
   dependencies:
-    "@starknet-react/chains" "^0.1.6"
+    "@starknet-react/chains" "^0.1.7"
     "@tanstack/react-query" "^5.0.1"
     eventemitter3 "^5.0.1"
     immutable "^4.3.4"
@@ -775,17 +775,17 @@
   dependencies:
     tslib "^2.4.0"
 
-"@tanstack/query-core@5.18.1":
-  version "5.18.1"
-  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.18.1.tgz#b653ee354b7f4712d53565ccc5c6d8fb83ec866c"
-  integrity sha512-fYhrG7bHgSNbnkIJF2R4VUXb4lF7EBiQjKkDc5wOlB7usdQOIN4LxxHpDxyE3qjqIst1WBGvDtL48T0sHJGKCw==
+"@tanstack/query-core@5.20.5":
+  version "5.20.5"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.20.5.tgz#12bb02a937cc8f4f158b1428c0ddef5a1f48479b"
+  integrity sha512-T1W28gGgWn0A++tH3lxj3ZuUVZZorsiKcv+R50RwmPYz62YoDEkG4/aXHZELGkRp4DfrW07dyq2K5dvJ4Wl1aA==
 
 "@tanstack/react-query@^5.0.1":
-  version "5.18.1"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.18.1.tgz#fd4e7b87260e82c5277355ad64f0e431a9302e02"
-  integrity sha512-PdI07BbsahZ+04PxSuDQsQvBWe008eWFk/YYWzt8fvzt2sALUM0TpAJa/DFpqa7+SSo7j1EQR6Jx6znXNHyaXw==
+  version "5.20.5"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.20.5.tgz#ebf57b6d3344478d505ad8db09a8b29262a35dab"
+  integrity sha512-6MHwJ8G9cnOC/XKrwt56QMc91vN7hLlAQNUA0ubP7h9Jj3a/CmkUwT6ALdFbnVP+PsYdhW3WONa8WQ4VcTaSLQ==
   dependencies:
-    "@tanstack/query-core" "5.18.1"
+    "@tanstack/query-core" "5.20.5"
 
 "@trpc/client@^10.38.1":
   version "10.45.1"

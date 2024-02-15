@@ -6,6 +6,7 @@ import {
   useDisconnect,
   useSignTypedData,
   Connector,
+  nethermindProvider
 } from "@starknet-react/core";
 import { useStarknetkitConnectModal } from "starknetkit";
 import {
@@ -35,9 +36,9 @@ function ConnectWallet({ fid, username, timestamp }: FarcasterData) {
   let [score, setScore] = useState(0);
   let [signatureResult, setSignatureResult] = useState(false);
   let [signatureMessageResult, setSignatureMessageResult] = useState("");
-  let { starknetkitConnectModal } = useStarknetkitConnectModal({
-    dappName: "Braavos Pro Score",
-  });
+  // let { starknetkitConnectModal } = useStarknetkitConnectModal({
+  //   dappName: "Braavos Pro Score",
+  // });
 
   const message: typedData.TypedData = {
     domain: {
@@ -80,8 +81,11 @@ function ConnectWallet({ fid, username, timestamp }: FarcasterData) {
   ) => {
     console.log("accessing verifySignature...");
     const provider = new RpcProvider({
-      nodeUrl: process.env.NEXT_PUBLIC_NETHERMIND_MAINNET_URL,
+      nodeUrl: process.env.NEXT_PUBLIC_BLAST_MAINNET_URL,
     });
+    // const provider = nethermindProvider({
+    //   apiKey: process.env.NEXT_PUBLIC_NETHERMIND_API_KEY!,
+    // });
 
     try {
       const abi = await getAbi(provider, contractAddress);
@@ -89,6 +93,8 @@ function ConnectWallet({ fid, username, timestamp }: FarcasterData) {
       const contract = new Contract(abi, contractAddress, provider);
       const msgHash = typedData.getMessageHash(message, contractAddress);
 
+      console.log("msgHash: ", msgHash);
+      console.log("signature: ", signature);
       await contract.isValidSignature(msgHash, signature);
       setValidSignature(true);
 

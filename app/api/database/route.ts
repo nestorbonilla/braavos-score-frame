@@ -1,5 +1,12 @@
 import { createSupabaseAppServerClient } from '@/lib/supabaseAppRouterClient';
 
+interface ScoreReadRecord {
+  fid: number;
+  username: string;
+  score: number;
+  fc_timestamp: string;
+}
+
 interface ScoreRecord {
   id: number;
   sn_address: string;
@@ -37,7 +44,14 @@ export async function GET(req: Request) {
     return acc;
   }, [] as ScoreRecord[]).slice(0, 10); // Asegúrate de que el acumulador inicial esté tipado correctamente
 
-  return new Response(JSON.stringify({ success: true, data: filteredData }), {
+  const finalFieldsData = filteredData.map(({ fid, username, score, fc_timestamp }: ScoreReadRecord) => ({
+    fid,
+    username,
+    score,
+    fc_timestamp
+  }));
+  
+  return new Response(JSON.stringify({ success: true, data: finalFieldsData }), {
     status: 200,
     headers: { 'Content-Type': 'application/json' },
   });
