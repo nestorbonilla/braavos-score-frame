@@ -106,23 +106,26 @@ function ConnectWallet({ fid, username, timestamp }: FarcasterData) {
       setValidSignature(true);
 
       // Store the result in a database
-      try {
-        await fetch("/api/database", {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ fid, username, sn_address: contractAddress, score, fc_timestamp: timestamp }),
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            setSignatureResult(data.success);
-            setSignatureMessageResult(data.message);
-            console.log(data.success);
-          });
-      } catch (error) {
-        console.error("Failed to add mapping:", error);
+      if (score > 0 && contractAddress != "") {
+        try {
+          await fetch("/api/database", {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ fid, username, sn_address: contractAddress, score, fc_timestamp: timestamp }),
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              setSignatureResult(data.success);
+              setSignatureMessageResult(data.message);
+              console.log(data.success);
+            });
+        } catch (error) {
+          console.error("Failed to add mapping:", error);
+        }
       }
+
     } catch (error) {
       console.error(error);
     }
