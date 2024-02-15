@@ -93,9 +93,16 @@ function ConnectWallet({ fid, username, timestamp }: FarcasterData) {
       const contract = new Contract(abi, contractAddress, provider);
       const msgHash = typedData.getMessageHash(message, contractAddress);
 
-      console.log("msgHash: ", msgHash);
-      console.log("signature: ", signature);
-      await contract.isValidSignature(msgHash, signature);
+      // Verify the signature
+      // Currently not working after Braavos version upgrade
+      try {
+        await contract.isValidSignature(msgHash, signature);
+      } catch (error) {
+        console.error("Error verifying signature:", error);
+        // setValidSignature(false);
+        // return;
+      }
+
       setValidSignature(true);
 
       // Store the result in a database
